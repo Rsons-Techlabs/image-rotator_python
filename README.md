@@ -7,6 +7,7 @@ This script detects image orientation and rotates images to portrait orientation
 - **OpenCV-Powered Text Detection**: Uses advanced computer vision algorithms for robust text analysis
 - **Multi-Method Analysis**: Combines morphological operations, edge detection, and contour analysis
 - **High Accuracy**: Much more reliable text orientation detection than simple gradient methods
+- **Custom Rotation Angles**: Rotate images by any specified angle (e.g., 90°, -90°, 180°, 45°)
 - Automatically detects image orientation using EXIF data and dimensions
 - Rotates landscape images to portrait orientation (when text allows)
 - Preserves image quality during rotation
@@ -69,6 +70,27 @@ Modify the original files instead of creating copies:
 
 ```bash
 python image_orientation_fixer.py /path/to/your/images --overwrite
+```
+
+### Custom Rotation Angle
+
+Rotate all images by a specific angle (ignores text analysis and orientation checks):
+
+```bash
+# Rotate all images 90 degrees clockwise
+python image_orientation_fixer.py /path/to/your/images --angle 90
+
+# Rotate all images 90 degrees counter-clockwise
+python image_orientation_fixer.py /path/to/your/images --angle -90
+
+# Rotate all images 180 degrees (upside down)
+python image_orientation_fixer.py /path/to/your/images --angle 180
+
+# Rotate by 45 degrees and overwrite original files
+python image_orientation_fixer.py /path/to/your/images --angle 45 --overwrite
+
+# Custom angle with debug output
+python image_orientation_fixer.py /path/to/your/images --angle 135 --debug
 ```
 
 ### Help
@@ -142,6 +164,8 @@ The OpenCV-powered algorithm uses three sophisticated computer vision methods:
 
 ## Example Output
 
+### Text-Aware Processing (Default)
+
 ```
 Processing images in: /Users/example/photos
 Output directory: /Users/example/photos/portrait_fixed
@@ -195,10 +219,47 @@ Images preserved for text readability: 2
 Images already portrait: 0
 ```
 
+### Custom Angle Processing
+
+```
+Processing images in: /Users/example/photos
+Recursive processing: Enabled
+Saving to: Same folder as source images
+Text-aware rotation: Enabled
+Custom rotation angle: 180°
+Debug mode: Disabled
+--------------------------------------------------
+
+Processing: document_landscape.jpg
+Orientation: landscape
+Rotation needed: 180°
+Rotated 180° and saved: document_landscape.jpg
+
+Processing: photo_portrait.jpg
+Orientation: portrait
+Rotation needed: 180°
+Rotated 180° and saved: photo_portrait.jpg
+
+Processing: screenshot_landscape.jpg
+Orientation: landscape
+Rotation needed: 180°
+Rotated 180° and saved: screenshot_landscape.jpg
+
+==================================================
+Processing complete!
+Total images processed: 3
+Images rotated: 3
+Images preserved for text readability: 0
+Images already portrait: 0
+```
+
 ## Command Line Options
 
 - `input_dir`: Directory containing images to process (required)
 - `-o, --output`: Output directory (optional, defaults to 'portrait_fixed' subdirectory)
 - `--overwrite`: Overwrite original files instead of creating copies
 - `--force-rotate`: Disable text-aware rotation and force rotate all landscape images
+- `--angle DEGREES`: Rotate all images by a specific angle in degrees (e.g., 90, -90, 180, 45.5). When specified, ignores text analysis and orientation checks. Accepts values between -360 and 360 degrees.
 - `--debug`: View detailed text analysis information
+- `--recursive`: Process subdirectories recursively (enabled by default)
+- `--no-recursive`: Disable recursive processing, only process files in the specified directory
